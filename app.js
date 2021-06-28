@@ -3,10 +3,15 @@ const app = express()
 const port = 3000
 
 const serverLog = function (req, res ,next) {
-    const reqTime = new Date().toLocaleString('zh', { timeZone: 'Asia/Taipei', hour12: false })
+    const reqTime = new Date()
     const reqMeth = req.method
     const reqUrl = req.url
-    console.log(`${reqTime} | ${reqMeth} from ${reqUrl}`)
+    res.on('finish', () => {
+        const resTime = new Date()
+        const runTime = resTime - reqTime
+        const currentTime = new Date(reqTime).toLocaleString('zh', { timeZone: 'Asia/Taipei', hour12: false })
+        console.log(`${currentTime} | ${reqMeth} from ${reqUrl} | total time : ${runTime} ms`)
+    })
     next()
 }
 app.use(serverLog)
